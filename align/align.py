@@ -132,12 +132,15 @@ class NeedlemanWunsch:
 
         # TODO Implement the global sequence alignment here-----------------
         
-        #initialize the zeroeth row and column of each matrix
-        self._align_matrix[0,0] = 0 #align[0,0] initialized to zero
-        for i in range(1,len(self.seqA)):
-            self.seqA_align[i,0] = self.gap_open
-        for i in range(1,len(self.seqB)):
-            self.seqB_align[0,i] = self.gap_open
+        #initialize the alignment/gap matrices
+        self._align_matrix[0,0] = 0 #align[0,0] initialize the first entry of align_matrix to zero
+        for i in range(0,len(self.seqA)+1):
+            self._gapA_matrix[i,0] = self.gap_open + self.gap_extend*i #initialize first column of seqA_align
+        for i in range(0,len(self.seqB)+1):
+            self._gapB_matrix[0,i] = self.gap_open + self.gap_extend*i #initialize first row of seqB_align
+        
+        
+        
         
         
 
