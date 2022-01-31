@@ -130,7 +130,10 @@ class NeedlemanWunsch:
         self._seqA = seqA
         self._seqB = seqB
 
-        # TODO Implement the global sequence alignment here
+        # TODO Implement the global sequence alignment here-----------------
+        
+        #initialize the zeroeth row and column of each matrix
+        self._align_matrix[0,0] = 
         pass
 
         return self._backtrace()
