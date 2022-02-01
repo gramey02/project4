@@ -140,7 +140,28 @@ class NeedlemanWunsch:
             self._gapB_matrix[0,i] = self.gap_open + self.gap_extend*i #initialize first row of seqB_align
         
         
-        
+        #matrices have been initialized, now fill each one in
+        for i in range(1,len(seqB)+1):
+            for j in range(1,len(seqA)+1):
+                    
+                #fill align_matrix
+                self._align_matrix[j,i] = sub_dict([(seqB[j-1],seqA[i-1])]) + max(self._align_matrix[j-1,i-1],
+                                                                                 self._gapA_matrix[j-1,i-1],
+                                                                                 self._gapB_matrix[j-1,i-1])
+                
+                #fill gapA_matrix
+                self._gapA_matrix[j,i] = max(self.gap_start + self.gap_extend + self._align_matrix[j-1,i],
+                                            self.gap_extend + self._gapA_matrix[j-1,i],
+                                            self.gap_start + self.gap_extend + self._gapB_matrix[j-1,i])
+                
+                
+                #fill gapB_matrix
+                self._gapB_matrix[j,i] = max(self.gap_start + self.gap_extend + self._align_matrix[j, i-1],
+                                            self.gap_start + self.gap_extend + self._gapA_matrix[j, i-1],
+                                            self.gap_extend + self._gapB_matrix[j, i-1])
+               
+                
+                
         
         
 
@@ -154,6 +175,10 @@ class NeedlemanWunsch:
         score, the seqA alignment and the seqB alignment respectively.
         """
         # Implement this method based upon the heuristic chosen in the align method above.
+        
+        #so this method will make use of the back, back_A, and back_B matrices to trace back what the original alignment is, and you will concatenate together what the final alignments look like, along with the final score
+        
+        
         pass
 
 
