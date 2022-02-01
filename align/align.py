@@ -245,13 +245,99 @@ class NeedlemanWunsch:
                  self._gapB_matrix[len(self._seqA)+1, len(self._seqB)+1]) == self._gapB_matrix[len(self._seqA)+1, len(self._seqB)+1] :
             final_position = "gapB_matrix"
         
-        #create a tuple which holds the matrix, row, and column information of the highest alignment score
-        cur_tuple=(final_position, len(self._seqA)+1, len(self._seqB)+1)
-        alignment_list = [cur_tuple] #add this tuple to a list which will contain the backtrack information
+        #initialize current variables
+        cur_matrix = None
+        cur_matrix_name = None
+        cur_row = None
+        cur_col = None
+        alignment_list = [] #this will hold backtrace route
         
+        #set current_matrix variable
+        if final_position=="align_matrix":
+            cur_matrix = self._align_matrix
+            cur_matrix_name = "align_matrix"
+        elif final_position=="gapA_matrix":
+            cur_matrix = self._gapA_matrix
+            cur_matrix_name = "gapA_matrix"
+        elif final_position=="gapB_matrix":
+            cur_matrix = self._gapB_matrix
+            cur_matrix_name = "gapB_matrix"
+        #set current column and row variables
+        cur_row = len(self._seqA)
+        cur_col = len(self._seqB)
+        
+        
+        
+        #get initial backtrace entry
+        came_from = cur_matrix[cur_row, cur_col] #came_from is in the form: (matrix name, row #, col #)
+        if came_from[0]=="align_matrix":
+            back_matrix = self._back
+        elif came_from[0]=="gapA_matrix":
+            back_matrix = self._back_A
+        elif came_from[0]=="gapB_matrix":
+            back_matrix = self._back_B
+        back_row = came_from[1]
+        back_col = came_from[2]
+        alignment_list.append((cur_matrix_name, cur_row, cur_col))
+        
+        while np.isinf(back_matrix[back_row, back_col]) == False:
+            came_from = back_matrix[back_row, back_col] #get the tuple that represents the matrix, row #, and column # where the last alignment came from
+            alignment_list.append(came_from) #add this latest alignment tuple to the alignment list, which will contain the backtrace route
+            
+            #now update the current backtrace matrix based on where the last alignment came from
+            if came_from[0]=="align_matrix":
+                back_matrix = self._back
+            elif came_from[0]=="gapA_matrix":
+                back_matrix = self._back_A
+            elif came_from[0]=="gapB_matrix":
+                back_matrix = self._back_B
+            #update the row and column numbers for where the last alignment came from
+            back_row = came_from[1]
+            back_col = came_from[2]
+        
+        
+        #at this point, alignment_list should be filled with tuples of the "order of traversal", or the backtrace route, through the alignment matrices
+        
+        seqA_align = ""
+        seqB_align = ""
+        #now construct two strings that represent the two sequences aligned
+        for i in range(0,len(alignment_list)):
+            cur_alignment = alignment_list[i]
+            #see if, based on the matrix name stored in the ith list entry, there is a match, or a gap in one of the sequences
+            if cur_alignment[0] == "align_matrix":
+                seqA_align = seqA_align + self._seqA[cur_alignment[2]-1]
+                seqB_align = seqB_align + self._seqB[cur_alignment[1]-1]
+            elif cur_alignment[0] == "gapA_matrix":
+                seqA_align = seqA_align + self._seqA[cur_alignment[2]]
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        
+        
+        
+        
+        
+        
+        #delete the below code
         #construct the alignment strings from the last letter(or lack of letter) to the first letter(or lack of letter) - will reverse the strings at end
-        while cur_tuple != -np.inf:
-            if cur_tuple[0]=="align_matrix"
+        while np.isinf(cur_matrix[cur_row, cur_col]) == False:
+            alignment_list.append[(cur_matrix_name, cur_matrix, cur_row, cur_col)] #this list stores the backtrace order
+            #now find where the current matrix, row value, and column value came from, and store those values
+            if cur_matrix_name=="align_matrix":
+                came_from = self._back[cur_row, cur_col]
+            elif cur_matrix_name=="gapA_matrix":
+                came_from = self._back_A[cur_row, cur_col]
+            elif cur_matrix_name=="gapB_matrix":
+                came_from = self._back_B[cur_row, cur_col]
+            #now you should have a tuple with the matrix name, matrix, row #, and column # that the last entry came from
+            
             
         
         # Implement this method based upon the heuristic chosen in the align method above.
@@ -259,6 +345,8 @@ class NeedlemanWunsch:
         #this method has no input
         
         #so this method will make use of the back, back_A, and back_B matrices to trace back what the original alignment is, and you will concatenate together what the final alignments look like, along with the final score
+        
+        #don't forget to reverse the strings
         
         #return tuple of alignment score, seqA alignment, and seqB alignment
         return (self.alignment_score, self.seqA_align, self.seqB_align)
