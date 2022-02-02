@@ -247,49 +247,50 @@ class NeedlemanWunsch:
             cur_backMatrix_type = "gapA_back"
             cur_backMatrix = self._back_A
         
-        #create a dictionary that tells you which backtrack matrix to use
+        #create a dictionary that tells you which backtrack matrix to use given a current matrix type
         which_back_matrix = {"align_matrix": self._back, "gapB_matrix": self._back_B, "gapA_matrix": self._back_A}
         
-        
+        #x and y will allow us to index into the sequence strings
         x = len(self._seqB)
         y = len(self._seqA)
         
-        
+        #cur_row and cur_col are the location markers of the current bactrace matrix entry
         cur_col = len(self._seqB)
         cur_row = len(self._seqA)
             
             
         while x>0 or y>0:
             if cur_matrix_type=="align_matrix":
-                self.seqA_align = self.seqA_align + self._seqA[y-1] #add the next letter in seqA
-                self.seqB_align = self.seqB_align + self._seqB[x-1] #add the next letter in seqB
+                self.seqA_align = self.seqA_align + self._seqA[y-1] #add the next letter in seqA (in reverse order)
+                self.seqB_align = self.seqB_align + self._seqB[x-1] #add the next letter in seqB (in reverse order)
+                #update x and y to reflect that a letter in each sequence was used
                 x -= 1
                 y -= 1
             elif cur_matrix_type=="gapB_matrix":
-                self.seqA_align = self.seqA_align + self._seqA[y-1] #add the next letter in seqA
+                self.seqA_align = self.seqA_align + self._seqA[y-1] #add the next letter in seqA (in reverse order)
                 self.seqB_align = self.seqB_align + "-" #add a gap in seqB
+                #update y to reflect that a letter in seqA was used
                 y -= 1
             elif cur_matrix_type=="gapA_matrix":
                 self.seqA_align = self.seqA_align + "-" #add a gap in seqA
-                self.seqB_align = self.seqB_align + self._seqB[x-1]
+                self.seqB_align = self.seqB_align + self._seqB[x-1] #add the next letter in seqB (in reverse order)
+                #update x to reflect that a letter in seqB was used
                 x -= 1
                 
-            backtrace = which_back_matrix[cur_matrix_type]
+            backtrace = which_back_matrix[cur_matrix_type] #get the backtrack matrix corresponding to the current matrix type
             
             #update current_matrix_type by finding the matrix at the location where the backtrace matrix points
-            cur_matrix_type = (backtrace[cur_row, cur_col])[0]
-            temp_cur_row = (backtrace[cur_row, cur_col])[1]
-            temp_cur_col = (backtrace[cur_row, cur_col])[2]
+            cur_matrix_type = (backtrace[cur_row, cur_col])[0] #update the current matrix type (align_matrix, gapB_matrix, or gapA_matrix) to backtrack one step
+            temp_cur_row = (backtrace[cur_row, cur_col])[1] #create a temp variable to update cur_row later
+            temp_cur_col = (backtrace[cur_row, cur_col])[2] #create a temp variable to update cur_col later
             
+            #update row and columnn indices to reflect the location you want to go to in the next backtrack matrix
             cur_row = temp_cur_row
             cur_col = temp_cur_col
             
         #reverse the alignment strings
-        
-        
-        "Hello World"[::-1]
-        
-        
+        self.seqA_align = self.seqA_align[::-1]
+        self.seqB_align = self.seqB_align[::-1] 
         
         return(self.alignment_score, self.seqA_align, self.seqB_align)
     
