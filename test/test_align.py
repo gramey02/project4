@@ -30,8 +30,8 @@ def test_nw_alignment():
     observed = NW._align_matrix
     for i in range(0,len(seq1)):
         for j in range(0,len(seq2)):
-            if expected[i,j].isinf() == True:
-                assert observed[i,j].isinf() ==True
+            if np.isinf(expected[i,j]) == True:
+                assert np.isinf(observed[i,j]) ==True
             else:
                 assert expected[i,j] == observed[i,j]
     
@@ -44,8 +44,8 @@ def test_nw_alignment():
     observed = NW._gapB_matrix
     for i in range(0,len(seq1)):
         for j in range(0,len(seq2)):
-            if expected[i,j].isinf() == True:
-                assert observed[i,j].isinf() ==True
+            if np.isinf(expected[i,j]) == True:
+                assert np.isinf(observed[i,j]) ==True
             else:
                 assert expected[i,j] == observed[i,j]
     
@@ -58,8 +58,8 @@ def test_nw_alignment():
     observed = NW._gapA_matrix
     for i in range(0,len(seq1)):
         for j in range(0,len(seq2)):
-            if expected[i,j].isinf() == True:
-                assert observed[i,j].isinf()==True
+            if np.isinf(expected[i,j]) == True:
+                assert np.isinf(observed[i,j])==True
             else:
                 assert expected[i,j] == observed[i,j]
     
@@ -94,10 +94,10 @@ def test_nw_backtrace():
     observed = NW2._back
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
-            if expected[i,j].isinf() == True:
-                assert observed[i,j].isinf() ==True
-            else:
+            if type(expected[i,j])==tuple:
                 assert expected[i,j] == observed[i,j]
+            elif np.isinf(expected[i,j]) == True:
+                assert np.isinf(observed[i,j]) ==True
 
     
     #_back_B check
@@ -110,10 +110,10 @@ def test_nw_backtrace():
     observed = NW2._back_B
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
-            if expected[i,j].isinf() == True:
-                assert observed[i,j].isinf() ==True
-            else:
+            if type(expected[i,j])==tuple:
                 assert expected[i,j] == observed[i,j]
+            elif np.isninf(expected[i,j]) == True:
+                assert np.isinf(observed[i,j]) ==True
     
     #_back_A check
     expected = np.array([[('gapA_matrix', 0, 0), ('gapA_matrix', 0, 1), ('gapA_matrix', 0, 2), ('gapA_matrix', 0, 3)],
@@ -125,10 +125,10 @@ def test_nw_backtrace():
     observed = NW2._back_A
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
-            if expected[i,j].isinf() == True:
-                assert observed[i,j].isinf() ==True
-            else:
+            if type(expected[i,j])==tuple:
                 assert expected[i,j] == observed[i,j]
+            elif np.isinf(expected[i,j]) == True:
+                assert np.isinf(observed[i,j]) ==True
     
     
 
