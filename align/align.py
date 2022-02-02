@@ -124,9 +124,9 @@ class NeedlemanWunsch:
 
         # create matrices for pointers used in backtrace procedure
         # adding dtype=np.ndarray will allow us to store objects (like tuples), rather than just integers, in the matrices
-        self._back = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = np.ndarray) * -np.inf
-        self._back_A = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = np.ndarray) * -np.inf
-        self._back_B = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = np.ndarray) * -np.inf
+        self._back = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = object) * -np.inf
+        self._back_A = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = object) * -np.inf
+        self._back_B = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = object) * -np.inf
 
         # Resetting alignment in case method is called more than once
         self.seqA_align = ""
@@ -172,45 +172,45 @@ class NeedlemanWunsch:
 
                 #fill _gapB_matrix and _back_B matrix:
                 #----------------------------------------------------------------------------------------------
-                self._gapB_matrix[j,i] = max(self.gap_start + self.gap_extend + self.align_matrix[j-1, i],
+                self._gapB_matrix[j,i] = max(self.gap_open + self.gap_extend + self._align_matrix[j-1, i],
                                              self.gap_extend + self._gapB_matrix[j-1,i],
-                                             self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i])
+                                             self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i])
                 
-                if max(self.gap_start + self.gap_extend + self.align_matrix[j-1, i],
+                if max(self.gap_open + self.gap_extend + self._align_matrix[j-1, i],
                        self.gap_extend + self._gapB_matrix[j-1,i],
-                       self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_start + self.gap_extend + self.align_matrix[j-1, i] :
+                       self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_open + self.gap_extend + self._align_matrix[j-1, i] :
                     self._back_B[j,i] = ("align_matrix", j-1, i)
                 
-                elif max(self.gap_start + self.gap_extend + self.align_matrix[j-1, i],
+                elif max(self.gap_open + self.gap_extend + self._align_matrix[j-1, i],
                          self.gap_extend + self._gapB_matrix[j-1,i],
-                         self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_extend + self._gapB_matrix[j-1,i] :
+                         self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_extend + self._gapB_matrix[j-1,i] :
                     self._back_B[j,i] = ("gapB_matrix", j-1, i)
                     
-                elif max(self.gap_start + self.gap_extend + self.align_matrix[j-1, i],
+                elif max(self.gap_open + self.gap_extend + self._align_matrix[j-1, i],
                          self.gap_extend + self._gapB_matrix[j-1,i],
-                         self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i] :
+                         self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i] :
                     self._back_B[j,i] = ("gapA_matrix", j-1, i)
                 
                 
                 
                 #fill _gapA_matrix and _back_A matrix:
                 #-------------------------------------------------------------------------------------------
-                self._gapA_matrix[j,i] = max(self.gap_start + self.gap_extend + self._align_matrix[j,i-1],
-                                             self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1],
+                self._gapA_matrix[j,i] = max(self.gap_open + self.gap_extend + self._align_matrix[j,i-1],
+                                             self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1],
                                              self.gap_extend + self._gapA_matrix[j,i-1])
                 #fill backtrace matrices by deterimining where the current align_matrix[j,i] value came from
-                if max(self.gap_start + self.gap_extend + self._align_matrix[j,i-1],
-                       self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1],
-                       self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_start + self.gap_extend + self._align_matrix[j,i-1] :
+                if max(self.gap_open + self.gap_extend + self._align_matrix[j,i-1],
+                       self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1],
+                       self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_open + self.gap_extend + self._align_matrix[j,i-1] :
                     self._back_A[j,i] = ("align_matrix", j, i-1)
                     
-                elif max(self.gap_start + self.gap_extend + self._align_matrix[j,i-1],
-                         self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1],
-                         self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1] :
+                elif max(self.gap_open + self.gap_extend + self._align_matrix[j,i-1],
+                         self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1],
+                         self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1] :
                     self._back_A[j,i] = ("gapB_matrix", j, i-1)
                     
-                elif max(self.gap_start + self.gap_extend + self._align_matrix[j,i-1],
-                         self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1],
+                elif max(self.gap_open + self.gap_extend + self._align_matrix[j,i-1],
+                         self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1],
                          self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_extend + self._gapA_matrix[j,i-1] :
                     self._back_A[j,i] = ("gapA_matrix", j, i-1)
                 
@@ -275,14 +275,16 @@ class NeedlemanWunsch:
                 
             backtrace = which_back_matrix[cur_matrix_type] #get the backtrack matrix corresponding to the current matrix type
             
-            #update current_matrix_type by finding the matrix at the location where the backtrace matrix points
-            cur_matrix_type = (backtrace[cur_row, cur_col])[0] #update the current matrix type (align_matrix, gapB_matrix, or gapA_matrix) to backtrack one step
-            temp_cur_row = (backtrace[cur_row, cur_col])[1] #create a temp variable to update cur_row later
-            temp_cur_col = (backtrace[cur_row, cur_col])[2] #create a temp variable to update cur_col later
+            if(np.isinf(backtrace[cur_row, cur_col]) == False):
+                #update current_matrix_type by finding the matrix at the location where the backtrace matrix points
+                #update the current matrix type (align_matrix, gapB_matrix, or gapA_matrix) to backtrack one step
+                cur_matrix_type = (backtrace[cur_row, cur_col])[0] 
+                temp_cur_row = (backtrace[cur_row, cur_col])[1] #create a temp variable to update cur_row later
+                temp_cur_col = (backtrace[cur_row, cur_col])[2] #create a temp variable to update cur_col later
             
-            #update row and columnn indices to reflect the location you want to go to in the next backtrack matrix
-            cur_row = temp_cur_row
-            cur_col = temp_cur_col
+                #update row and columnn indices to reflect the location you want to go to in the next backtrack matrix
+                cur_row = temp_cur_row
+                cur_col = temp_cur_col
             
         #reverse the alignment strings
         self.seqA_align = self.seqA_align[::-1]
