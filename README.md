@@ -1,3 +1,4 @@
+![BuildStatus](https://github.com/gramey02/project4/workflows/project4/badge.svg?event=push)
 # Project 4
 Needleman Wunsch Algorithm
 
