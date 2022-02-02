@@ -22,11 +22,11 @@ def test_nw_alignment():
     NW.align(seq1, seq2)
     
     #check that the alignment matrix equals what it should
-    expected = np.array([[  0., -inf, -inf, -inf],
-                         [-inf,   5., -11., -13.],
-                         [-inf, -12.,   4.,  -8.],
-                         [-inf, -12.,  -1.,   5.],
-                         [-inf, -14.,  -6.,   4.]])
+    expected = np.array([[  0., -np.inf, -np.inf, -np.inf],
+                         [-np.inf,   5., -11., -13.],
+                         [-np.inf, -12.,   4.,  -8.],
+                         [-np.inf, -12.,  -1.,   5.],
+                         [-np.inf, -14.,  -6.,   4.]], dtype=object)
     observed = NW._align_matrix
     for i in range(0,len(seq1)):
         for j in range(0,len(seq2)):
@@ -36,7 +36,7 @@ def test_nw_alignment():
                 assert expected[i,j] == observed[i,j]
     
     #check that the gap_B matrix equals what it should
-    expected = np.array([[-10., -inf, -inf, -inf],
+    expected = np.array([[-10., -np.inf, -np.inf, -np.inf],
                          [-11., -22., -23., -24.],
                          [-12.,  -6., -17., -18.],
                          [-13.,  -7.,  -7., -18.],
@@ -51,10 +51,10 @@ def test_nw_alignment():
     
     #check that the gap_A matrix equals what it should
     expected = np.array([[-10., -11., -12., -13.],
-                         [-inf, -22.,  -6.,  -7.],
-                         [-inf, -23., -17.,  -7.],
-                         [-inf, -24., -18., -12.],
-                         [-inf, -25., -19., -17.]])
+                         [-np.inf, -22.,  -6.,  -7.],
+                         [-np.inf, -23., -17.,  -7.],
+                         [-np.inf, -24., -18., -12.],
+                         [-np.inf, -25., -19., -17.]])
     observed = NW._gapA_matrix
     for i in range(0,len(seq1)):
         for j in range(0,len(seq2)):
@@ -86,11 +86,11 @@ def test_nw_backtrace():
     
     #check that each of the backtrace matrices equals what it should
     #_back check
-    expected = np.array([[('align_matrix', 0, 0), ('align_matrix', 0, 1), ('align_matrix', 0, 2), -inf],
+    expected = np.array([[('align_matrix', 0, 0), ('align_matrix', 0, 1), ('align_matrix', 0, 2), -np.inf],
                          [('align_matrix', 1, 0), ('align_matrix', 0, 0), ('gapA_matrix', 0, 1), ('gapA_matrix', 0, 2)],
                          [('align_matrix', 2, 0), ('gapB_matrix', 1, 0), ('align_matrix', 1, 1), ('gapA_matrix', 1, 2)],
                          [('align_matrix', 3, 0), ('gapB_matrix', 2, 0), ('gapB_matrix', 2, 1), ('align_matrix', 2, 2)],
-                         [-inf, ('gapB_matrix', 3, 0), ('gapB_matrix', 3, 1), ('align_matrix', 3, 2)]], dtype=object)
+                         [-np.inf, ('gapB_matrix', 3, 0), ('gapB_matrix', 3, 1), ('align_matrix', 3, 2)]], dtype=object)
     observed = NW._back
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
