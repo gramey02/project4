@@ -84,52 +84,104 @@ def test_nw_backtrace():
     NW2 = NeedlemanWunsch('./substitution_matrices/BLOSUM62.mat', -10, -1)
     NW2.align(seq3, seq4)
     
+    
     #check that each of the backtrace matrices equals what it should
     #_back check
-    expected = np.array([[('align_matrix', 0, 0), ('align_matrix', 0, 1), ('align_matrix', 0, 2), -np.inf],
-                         [('align_matrix', 1, 0), ('align_matrix', 0, 0), ('gapA_matrix', 0, 1), ('gapA_matrix', 0, 2)],
-                         [('align_matrix', 2, 0), ('gapB_matrix', 1, 0), ('align_matrix', 1, 1), ('gapA_matrix', 1, 2)],
-                         [('align_matrix', 3, 0), ('gapB_matrix', 2, 0), ('gapB_matrix', 2, 1), ('align_matrix', 2, 2)],
-                         [-np.inf, ('gapB_matrix', 3, 0), ('gapB_matrix', 3, 1), ('align_matrix', 3, 2)]], dtype=object)
+    expected = np.array([[('align_matrix', 0, 0), ('align_matrix', 0, 1),('align_matrix', 0, 2), ('align_matrix', 0, 3),
+                          ('align_matrix', 0, 4), ('align_matrix', 0, 5),('align_matrix', 0, 6), -np.inf],
+                         [('align_matrix', 1, 0), ('align_matrix', 0, 0), ('gapA_matrix', 0, 1), ('gapA_matrix', 0, 2),
+                          ('gapA_matrix', 0, 3), ('gapA_matrix', 0, 4),('gapA_matrix', 0, 5), ('gapA_matrix', 0, 6)],
+                         [('align_matrix', 2, 0), ('gapB_matrix', 1, 0),('align_matrix', 1, 1), ('gapA_matrix', 1, 2),
+                          ('gapA_matrix', 1, 3), ('gapA_matrix', 1, 4),('gapA_matrix', 1, 5), ('gapA_matrix', 1, 6)],
+                         [('align_matrix', 3, 0), ('gapB_matrix', 2, 0),('gapB_matrix', 2, 1), ('align_matrix', 2, 2),
+                          ('align_matrix', 2, 3), ('align_matrix', 2, 4),('align_matrix', 2, 5), ('gapA_matrix', 2, 6)],
+                         [('align_matrix', 4, 0), ('gapB_matrix', 3, 0),('gapB_matrix', 3, 1), ('gapB_matrix', 3, 2),
+                          ('align_matrix', 3, 3), ('align_matrix', 3, 4),('gapA_matrix', 3, 5), ('gapA_matrix', 3, 6)],
+                         [('align_matrix', 5, 0), ('gapB_matrix', 4, 0),('gapB_matrix', 4, 1), ('align_matrix', 4, 2),
+                          ('gapB_matrix', 4, 3), ('align_matrix', 4, 4),('align_matrix', 4, 5), ('align_matrix', 4, 6)],
+                         [('align_matrix', 6, 0), ('gapB_matrix', 5, 0),('gapB_matrix', 5, 1), ('align_matrix', 5, 2),
+                          ('gapB_matrix', 5, 3), ('align_matrix', 5, 4),('align_matrix', 5, 5), ('align_matrix', 5, 6)],
+                         [('align_matrix', 7, 0), ('gapB_matrix', 6, 0),('gapB_matrix', 6, 1), ('gapB_matrix', 6, 2),
+                          ('align_matrix', 6, 3), ('align_matrix', 6, 4),('gapB_matrix', 6, 5), ('align_matrix', 6, 6)],
+                         [('align_matrix', 8, 0), ('gapB_matrix', 7, 0),('gapB_matrix', 7, 1), ('gapB_matrix', 7, 2),
+                          ('align_matrix', 7, 3), ('align_matrix', 7, 4),('gapA_matrix', 7, 5), ('gapA_matrix', 7, 6)],
+                         [('align_matrix', 9, 0), ('gapB_matrix', 8, 0),('gapB_matrix', 8, 1), ('align_matrix', 8, 2),
+                          ('gapB_matrix', 8, 3), ('gapB_matrix', 8, 4),('align_matrix', 8, 5), ('gapA_matrix', 8, 6)],
+                         [-np.inf, ('gapB_matrix', 9, 0), ('gapB_matrix', 9, 1),('align_matrix', 9, 2), ('gapB_matrix', 9, 3),
+                          ('gapB_matrix', 9, 4), ('align_matrix', 9, 5),('align_matrix', 9, 6)]], dtype=object)
     observed = NW2._back
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
-            if i==4 and j==0
-            if type(expected[i,j])==tuple:
+            if (i==10 and j==0) or (i==0 and j==8):
+                assert np.isninf(observed[i,j])==True
+            else:
                 assert expected[i,j] == observed[i,j]
-            elif np.isinf(expected[i,j]) == True:
-                assert np.isinf(observed[i,j]) ==True
+
 
     
     #_back_B check
-    expected = np.array([[('gapB_matrix', 0, 0), ('gapB_matrix', 0, 1), ('gapB_matrix', 0, 2), ('gapB_matrix', 0, 3)],
-                         [('gapB_matrix', 1, 0), ('gapA_matrix', 0, 1), ('gapA_matrix', 0, 2), ('gapA_matrix', 0, 3)],
-                         [('gapB_matrix', 2, 0), ('align_matrix', 1, 1), ('gapA_matrix', 1, 2), ('gapA_matrix', 1, 3)],
-                         [('gapB_matrix', 3, 0), ('gapB_matrix', 2, 1), ('align_matrix', 2, 2), ('gapA_matrix', 2, 3)],
-                         [('gapB_matrix', 4, 0), ('gapB_matrix', 3, 1), ('gapB_matrix', 3, 2), ('align_matrix', 3, 3)]],
-                        dtype=object)
+    expected = np.array([[('gapB_matrix', 0, 0), ('gapB_matrix', 0, 1),('gapB_matrix', 0, 2), ('gapB_matrix', 0, 3),
+                          ('gapB_matrix', 0, 4), ('gapB_matrix', 0, 5),('gapB_matrix', 0, 6), ('gapB_matrix', 0, 7)],
+                         [('gapB_matrix', 1, 0), ('gapA_matrix', 0, 1),('gapA_matrix', 0, 2), ('gapA_matrix', 0, 3),
+                          ('gapA_matrix', 0, 4), ('gapA_matrix', 0, 5),('gapA_matrix', 0, 6), ('gapA_matrix', 0, 7)],
+                         [('gapB_matrix', 2, 0), ('align_matrix', 1, 1),('gapA_matrix', 1, 2), ('gapA_matrix', 1, 3),
+                          ('gapA_matrix', 1, 4), ('gapA_matrix', 1, 5),('gapA_matrix', 1, 6), ('gapA_matrix', 1, 7)],
+                         [('gapB_matrix', 3, 0), ('gapB_matrix', 2, 1),('align_matrix', 2, 2), ('align_matrix', 2, 3),
+                          ('align_matrix', 2, 4), ('align_matrix', 2, 5),('gapA_matrix', 2, 6), ('align_matrix', 2, 7)],
+                         [('gapB_matrix', 4, 0), ('gapB_matrix', 3, 1),('gapB_matrix', 3, 2), ('align_matrix', 3, 3),
+                          ('align_matrix', 3, 4), ('gapA_matrix', 3, 5),('gapA_matrix', 3, 6), ('gapA_matrix', 3, 7)],
+                         [('gapB_matrix', 5, 0), ('gapB_matrix', 4, 1),('gapB_matrix', 4, 2), ('gapB_matrix', 4, 3),
+                          ('align_matrix', 4, 4), ('align_matrix', 4, 5),('align_matrix', 4, 6), ('align_matrix', 4, 7)],
+                         [('gapB_matrix', 6, 0), ('gapB_matrix', 5, 1),('gapB_matrix', 5, 2), ('gapB_matrix', 5, 3),
+                          ('gapB_matrix', 5, 4), ('align_matrix', 5, 5),('gapB_matrix', 5, 6), ('align_matrix', 5, 7)],
+                         [('gapB_matrix', 7, 0), ('gapB_matrix', 6, 1),('gapB_matrix', 6, 2), ('gapB_matrix', 6, 3),
+                          ('gapB_matrix', 6, 4), ('gapB_matrix', 6, 5),('align_matrix', 6, 6), ('gapB_matrix', 6, 7)],
+                         [('gapB_matrix', 8, 0), ('gapB_matrix', 7, 1),('gapB_matrix', 7, 2), ('gapB_matrix', 7, 3),
+                          ('align_matrix', 7, 4), ('gapB_matrix', 7, 5),('gapB_matrix', 7, 6), ('gapB_matrix', 7, 7)],
+                         [('gapB_matrix', 9, 0), ('gapB_matrix', 8, 1),('gapB_matrix', 8, 2), ('gapB_matrix', 8, 3),
+                          ('gapB_matrix', 8, 4), ('align_matrix', 8, 5),('gapA_matrix', 8, 6), ('gapA_matrix', 8, 7)],
+                         [('gapB_matrix', 10, 0), ('gapB_matrix', 9, 1),('gapB_matrix', 9, 2), ('gapB_matrix', 9, 3),
+                          ('gapB_matrix', 9, 4), ('gapB_matrix', 9, 5),('align_matrix', 9, 6), ('gapA_matrix', 9, 7)]],
+                        dtype=object)    
     observed = NW2._back_B
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
-            if type(expected[i,j])==tuple:
-                assert expected[i,j] == observed[i,j]
-            elif np.isninf(expected[i,j]) == True:
-                assert np.isinf(observed[i,j]) ==True
+            assert expected[i,j][0] == observed[i,j][0]
+            assert expected[i,j][1] == observed[i,j][1]
+            assert expected[i,j][2] == observed[i,j][2]
+    
+    
     
     #_back_A check
-    expected = np.array([[('gapA_matrix', 0, 0), ('gapA_matrix', 0, 1), ('gapA_matrix', 0, 2), ('gapA_matrix', 0, 3)],
-                         [('gapA_matrix', 1, 0), ('gapB_matrix', 1, 0), ('align_matrix', 1, 1), ('gapA_matrix', 1, 2)],
-                         [('gapA_matrix', 2, 0), ('gapB_matrix', 2, 0), ('gapB_matrix', 2, 1), ('align_matrix', 2, 2)],
-                         [('gapA_matrix', 3, 0), ('gapB_matrix', 3, 0), ('gapB_matrix', 3, 1), ('align_matrix', 3, 2)],
-                         [('gapA_matrix', 4, 0), ('gapB_matrix', 4, 0), ('gapB_matrix', 4, 1), ('align_matrix', 4, 2)]],
+    expected = np.array([[('gapA_matrix', 0, 0), ('gapA_matrix', 0, 1),('gapA_matrix', 0, 2), ('gapA_matrix', 0, 3),
+                          ('gapA_matrix', 0, 4), ('gapA_matrix', 0, 5),('gapA_matrix', 0, 6), ('gapA_matrix', 0, 7)],
+                         [('gapA_matrix', 1, 0), ('gapB_matrix', 1, 0),('align_matrix', 1, 1), ('gapA_matrix', 1, 2),
+                          ('gapA_matrix', 1, 3), ('gapA_matrix', 1, 4),('gapA_matrix', 1, 5), ('gapA_matrix', 1, 6)],
+                         [('gapA_matrix', 2, 0), ('gapB_matrix', 2, 0),('gapB_matrix', 2, 1), ('align_matrix', 2, 2),
+                          ('gapA_matrix', 2, 3), ('gapA_matrix', 2, 4),('gapA_matrix', 2, 5), ('gapA_matrix', 2, 6)],
+                         [('gapA_matrix', 3, 0), ('gapB_matrix', 3, 0),('gapB_matrix', 3, 1), ('gapB_matrix', 3, 2),
+                          ('align_matrix', 3, 3), ('gapA_matrix', 3, 4),('gapA_matrix', 3, 5), ('gapA_matrix', 3, 6)],
+                         [('gapA_matrix', 4, 0), ('gapB_matrix', 4, 0),('gapB_matrix', 4, 1), ('align_matrix', 4, 2),
+                          ('gapB_matrix', 4, 3), ('align_matrix', 4, 4),('gapA_matrix', 4, 5), ('align_matrix', 4, 6)],
+                         [('gapA_matrix', 5, 0), ('gapB_matrix', 5, 0),('gapB_matrix', 5, 1), ('align_matrix', 5, 2),
+                          ('gapA_matrix', 5, 3), ('gapA_matrix', 5, 4),('align_matrix', 5, 5), ('gapA_matrix', 5, 6)],
+                         [('gapA_matrix', 6, 0), ('gapB_matrix', 6, 0),('gapB_matrix', 6, 1), ('gapB_matrix', 6, 2),
+                          ('align_matrix', 6, 3), ('gapA_matrix', 6, 4),('gapA_matrix', 6, 5), ('align_matrix', 6, 6)],
+                         [('gapA_matrix', 7, 0), ('gapB_matrix', 7, 0),('gapB_matrix', 7, 1), ('gapB_matrix', 7, 2),
+                          ('align_matrix', 7, 3), ('align_matrix', 7, 4),('gapA_matrix', 7, 5), ('gapA_matrix', 7, 6)],
+                         [('gapA_matrix', 8, 0), ('gapB_matrix', 8, 0),('gapB_matrix', 8, 1), ('align_matrix', 8, 2),
+                          ('gapB_matrix', 8, 3), ('gapB_matrix', 8, 4),('align_matrix', 8, 5), ('gapA_matrix', 8, 6)],
+                         [('gapA_matrix', 9, 0), ('gapB_matrix', 9, 0),('gapB_matrix', 9, 1), ('align_matrix', 9, 2),
+                          ('gapB_matrix', 9, 3), ('gapB_matrix', 9, 4),('align_matrix', 9, 5), ('align_matrix', 9, 6)],
+                         [('gapA_matrix', 10, 0), ('gapB_matrix', 10, 0),('gapB_matrix', 10, 1), ('align_matrix', 10, 2),
+                          ('gapB_matrix', 10, 3), ('gapB_matrix', 10, 4),('gapB_matrix', 10, 5), ('gapB_matrix', 10, 6)]],
                         dtype=object)
     observed = NW2._back_A
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
-            if type(expected[i,j])==tuple:
-                assert expected[i,j] == observed[i,j]
-            elif np.isinf(expected[i,j]) == True:
-                assert np.isinf(observed[i,j]) ==True
+            assert expected[i,j][0] == observed[i,j][0]
+            assert expected[i,j][1] == observed[i,j][1]
+            assert expected[i,j][2] == observed[i,j][2]
     
     
 
