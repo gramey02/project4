@@ -100,14 +100,22 @@ class NeedlemanWunsch:
 
     def align(self, seqA: str, seqB: str) -> Tuple[float, str, str]:
         """
-        # TODO: Fill in the Needleman-Wunsch Algorithm below
-        to perform global sequence alignment of seqA and seqB
-        and return a tuple with the following format
-        (alignment score, seqA alignment, seqB alignment)
-        Also, write up a docstring for this function using the
-        _read_sub_matrix as an example.
-        Don't forget to comment your code!
+        This function reads in two sequences of letters as strings.
+        The method will compute the lowest alignment score and find the corresponding sequence 
+        alignments based on initialized gap penalty and gap extension values.
+        Global alignment is being performed, so the Needleman-Wunsch algorithm is implemented.
+        Uses the _backtrace() method to get final score and alignments as outputs.
+        
+        Parameters:
+            seqA: str
+                sequence of letters to be aligned to sequence B
+            seqB: str
+                sequence of letters to be aligned to sequence A
+        Returns:
+            self._backtrace()
+                gives a Tuple[float,str,str] of the max alignment score, seqA alignment, and seqB alignment (complete with any matches/gaps)
         """
+        
         # Initialize 6 matrix private attributes for use in alignment
         # create matrices for alignment scores and gaps
         self._align_matrix = np.ones((len(seqA) + 1, len(seqB) + 1)) * -np.inf
@@ -130,10 +138,10 @@ class NeedlemanWunsch:
         self._seqA = seqA
         self._seqB = seqB
 
-        # TODO Implement the global sequence alignment here-----------------
+        #----------------------Global Sequence Alignment-------------------------#
         
         #initialize the alignment/gap matrices
-        self._align_matrix[0,0] = 0 #align[0,0] initialize the first entry of align_matrix to zero
+        self._align_matrix[0,0] = 0 #initialize the top left entry of align_matrix to zero
         for i in range(0,len(self._seqA)+1):
             self._gapA_matrix[i,0] = self.gap_open + self.gap_extend*i #initialize first column of seqA_align
         for i in range(0,len(self._seqB)+1):
@@ -205,8 +213,6 @@ class NeedlemanWunsch:
                          self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_extend + self._gapA_matrix[j,i-1] :
                     self._back_A[j,i] = ("gapA_matrix", j, i-1)
                 
-                
-
         return self._backtrace()
     
     
@@ -227,25 +233,14 @@ class NeedlemanWunsch:
                self._gapB_matrix[len(self._seqA), len(self._seqB)],
                self._gapA_matrix[len(self._seqA), len(self._seqB)]) == self._align_matrix[len(self._seqA), len(self._seqB)] :
             cur_matrix_type = "align_matrix"
-            cur_matrix = self._align_matrix
-            cur_backMatrix_type = "align_back"
-            cur_backMatrix = self._back
-            
         elif max(self._align_matrix[len(self._seqA), len(self._seqB)],
                  self._gapB_matrix[len(self._seqA), len(self._seqB)],
                  self._gapA_matrix[len(self._seqA), len(self._seqB)]) == self._gapB_matrix[len(self._seqA), len(self._seqB)] :
             cur_matrix_type = "gapB_matrix"
-            cur_matrix = self._gapB_matrix
-            cur_backMatrix_type = "gapB_back"
-            cur_backMatrix = self._back_B
-            
         elif max(self._align_matrix[len(self._seqA), len(self._seqB)],
                  self._gapB_matrix[len(self._seqA), len(self._seqB)],
                  self._gapA_matrix[len(self._seqA), len(self._seqB)]) == self._gapA_matrix[len(self._seqA), len(self._seqB)] :
             cur_matrix_type = "gapA_matrix"
-            cur_matrix = self._gapA_matrix
-            cur_backMatrix_type = "gapA_back"
-            cur_backMatrix = self._back_A
         
         #create a dictionary that tells you which backtrack matrix to use given a current matrix type
         which_back_matrix = {"align_matrix": self._back, "gapB_matrix": self._back_B, "gapA_matrix": self._back_A}
@@ -292,13 +287,7 @@ class NeedlemanWunsch:
         self.seqA_align = self.seqA_align[::-1]
         self.seqB_align = self.seqB_align[::-1] 
         
-        return(self.alignment_score, self.seqA_align, self.seqB_align)
-    
-    
-    
-    
-    
-    
+        return(self.alignment_score, self.seqA_align, self.seqB_align)   
     
 
 
