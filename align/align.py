@@ -144,9 +144,9 @@ class NeedlemanWunsch:
         #initialize the first row and column of the alignment/gap matrices
         self._align_matrix[0,0] = 0 #initialize the top left entry of align_matrix to zero
         for i in range(0,len(self._seqA)+1):
-            self._gapA_matrix[i,0] = self.gap_open + self.gap_extend*i #initialize first column of seqA_align
+            self._gapB_matrix[i,0] = self.gap_open + self.gap_extend*i #initialize first column of seqA_align
         for i in range(0,len(self._seqB)+1):
-            self._gapB_matrix[0,i] = self.gap_open + self.gap_extend*i #initialize first row of seqB_align
+            self._gapA_matrix[0,i] = self.gap_open + self.gap_extend*i #initialize first row of seqB_align
         
         #initialize the first row and column of the backtrace matrices (excluding the top left cell)
         for i in range(0,len(self._seqA)+1):
@@ -176,10 +176,12 @@ class NeedlemanWunsch:
                 
                 if max(self._align_matrix[j-1,i-1], self._gapA_matrix[j-1,i-1], self._gapB_matrix[j-1,i-1]) == self._align_matrix[j-1,i-1] :
                     self._back[j,i] = ("align_matrix", j-1, i-1) #where the jth, ith value of M came from, tuple(matrix, row, col)
+                    
+                elif max(self._align_matrix[j-1,i-1], self._gapA_matrix[j-1,i-1], self._gapB_matrix[j-1,i-1]) == self._gapB_matrix[j-1,i-1] :
+                    self._back[j,i] = ("gapB_matrix", j-1, i-1) #where the jth, ith value of M came from, tuple(matrix, row, col)                    
+                    
                 elif max(self._align_matrix[j-1,i-1], self._gapA_matrix[j-1,i-1], self._gapB_matrix[j-1,i-1]) == self._gapA_matrix[j-1,i-1] :
                     self._back[j,i] = ("gapA_matrix", j-1, i-1) #where the jth, ith value of M came from, tuple(matrix, row, col)
-                elif max(self._align_matrix[j-1,i-1], self._gapA_matrix[j-1,i-1], self._gapB_matrix[j-1,i-1]) == self._gapB_matrix[j-1,i-1] :
-                    self._back[j,i] = ("gapB_matrix", j-1, i-1) #where the jth, ith value of M came from, tuple(matrix, row, col)
                 
 
 
@@ -193,16 +195,18 @@ class NeedlemanWunsch:
                        self.gap_extend + self._gapB_matrix[j-1,i],
                        self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_open + self.gap_extend + self._align_matrix[j-1, i] :
                     self._back_B[j,i] = ("align_matrix", j-1, i)
+                    
+                elif max(self.gap_open + self.gap_extend + self._align_matrix[j-1, i],
+                         self.gap_extend + self._gapB_matrix[j-1,i],
+                         self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i] :
+                    self._back_B[j,i] = ("gapA_matrix", j-1, i)
                 
                 elif max(self.gap_open + self.gap_extend + self._align_matrix[j-1, i],
                          self.gap_extend + self._gapB_matrix[j-1,i],
                          self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_extend + self._gapB_matrix[j-1,i] :
                     self._back_B[j,i] = ("gapB_matrix", j-1, i)
                     
-                elif max(self.gap_open + self.gap_extend + self._align_matrix[j-1, i],
-                         self.gap_extend + self._gapB_matrix[j-1,i],
-                         self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_open + self.gap_extend + self._gapA_matrix[j-1, i] :
-                    self._back_B[j,i] = ("gapA_matrix", j-1, i)
+
                 
                 
                 
@@ -219,13 +223,15 @@ class NeedlemanWunsch:
                     
                 elif max(self.gap_open + self.gap_extend + self._align_matrix[j,i-1],
                          self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1],
-                         self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1] :
-                    self._back_A[j,i] = ("gapB_matrix", j, i-1)
+                         self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_extend + self._gapA_matrix[j,i-1] :
+                    self._back_A[j,i] = ("gapA_matrix", j, i-1)
                     
                 elif max(self.gap_open + self.gap_extend + self._align_matrix[j,i-1],
                          self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1],
-                         self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_extend + self._gapA_matrix[j,i-1] :
-                    self._back_A[j,i] = ("gapA_matrix", j, i-1)
+                         self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_open + self.gap_extend + self._gapB_matrix[j,i-1] :
+                    self._back_A[j,i] = ("gapB_matrix", j, i-1)
+                    
+
                 
         return self._backtrace()
     
@@ -280,21 +286,21 @@ class NeedlemanWunsch:
                 print("x: " + str(x))
                 print("y: " + str(y))
             elif cur_matrix_type=="gapB_matrix":
-                self.seqA_align = self.seqA_align +  self._seqA[x-1] #[y-1] #add the next letter in seqA (in reverse order)
+                self.seqA_align = self.seqA_align +  self._seqA[y-1] #[y-1] #add the next letter in seqA (in reverse order)
                 self.seqB_align = self.seqB_align + "-" #add a gap in seqB
                 #update y to reflect that a letter in seqA was used
                 print("x: " + str(x))
                 print("y: " + str(y))
-                x -= 1
+                y -= 1
                 print("x: " + str(x))
                 print("y: " + str(y))
             elif cur_matrix_type=="gapA_matrix":
                 self.seqA_align = self.seqA_align + "-" #add a gap in seqA
-                self.seqB_align = self.seqB_align + self._seqB[y-1] #[x-1] #add the next letter in seqB (in reverse order)
+                self.seqB_align = self.seqB_align + self._seqB[x-1] #[x-1] #add the next letter in seqB (in reverse order)
                 #update x to reflect that a letter in seqB was used
                 print("x: " + str(x))
                 print("y: " + str(y))
-                y -= 1
+                x -= 1
                 print("x: " + str(x))
                 print("y: " + str(y))
                 
