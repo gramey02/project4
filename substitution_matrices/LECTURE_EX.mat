@@ -1,0 +1,14 @@
+#
+# This matrix was produced by "pam" Version 1.0.6 [28-Jul-93]
+#
+# PAM 100 substitution matrix, scale = ln(2)/2 = 0.346574
+#
+# Expected score = -1.99, Entropy = 1.18 bits
+#
+# Lowest score = -9, Highest score = 12
+#
+ A  C  G  T 
+ 1 -1 -1 -1
+-1  1 -1 -1
+-1 -1  1 -1
+-1 -1 -1  1
