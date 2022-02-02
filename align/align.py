@@ -157,6 +157,10 @@ class NeedlemanWunsch:
             self._back_B[i,0] = ("gapB_matrix", i, 0)
         for i in range(0,len(self._seqB)+1):
             self._back_B[0,i] = ("gapB_matrix", 0, i)
+        for i in range(0,len(self._seqA)):
+            self._back[i,0] = ("align_matrix", i, 0)
+        for i in range(0,len(self._seqB)):
+            self._back[0,i] = ("align_matrix", 0, i)
         
         #matrices have been initialized, now fill each one in
         for i in range(1,len(self._seqB)+1):
@@ -276,8 +280,8 @@ class NeedlemanWunsch:
                 print("x: " + str(x))
                 print("y: " + str(y))
             elif cur_matrix_type=="gapB_matrix":
-                self.seqA_align = self.seqA_align + "-" #add the next letter in seqA (in reverse order)
-                self.seqB_align = self.seqB_align + self._seqB[x-1] #add a gap in seqB
+                self.seqA_align = self.seqA_align +  self._seqA[x-1] #[y-1] #add the next letter in seqA (in reverse order)
+                self.seqB_align = self.seqB_align + "-" #add a gap in seqB
                 #update y to reflect that a letter in seqA was used
                 print("x: " + str(x))
                 print("y: " + str(y))
@@ -285,8 +289,8 @@ class NeedlemanWunsch:
                 print("x: " + str(x))
                 print("y: " + str(y))
             elif cur_matrix_type=="gapA_matrix":
-                self.seqA_align = self.seqA_align + self._seqA[y-1] #add a gap in seqA
-                self.seqB_align = self.seqB_align + "-" #add the next letter in seqB (in reverse order)
+                self.seqA_align = self.seqA_align + "-" #add a gap in seqA
+                self.seqB_align = self.seqB_align + self._seqB[y-1] #[x-1] #add the next letter in seqB (in reverse order)
                 #update x to reflect that a letter in seqB was used
                 print("x: " + str(x))
                 print("y: " + str(y))
