@@ -279,33 +279,33 @@ class NeedlemanWunsch:
                 self.seqA_align = self.seqA_align + self._seqA[y-1] #add the next letter in seqA (in reverse order)
                 self.seqB_align = self.seqB_align + self._seqB[x-1] #add the next letter in seqB (in reverse order)
                 #update x and y to reflect that a letter in each sequence was used
-                print("x: " + str(x))
-                print("y: " + str(y))
+                #print("x: " + str(x))
+                #print("y: " + str(y))
                 x -= 1
                 y -= 1
-                print("x: " + str(x))
-                print("y: " + str(y))
+                #print("x: " + str(x))
+                #print("y: " + str(y))
             elif cur_matrix_type=="gapB_matrix":
                 self.seqA_align = self.seqA_align +  self._seqA[y-1] #[y-1] #add the next letter in seqA (in reverse order)
                 self.seqB_align = self.seqB_align + "-" #add a gap in seqB
                 #update y to reflect that a letter in seqA was used
-                print("x: " + str(x))
-                print("y: " + str(y))
+                #print("x: " + str(x))
+                #print("y: " + str(y))
                 y -= 1
-                print("x: " + str(x))
-                print("y: " + str(y))
+                #print("x: " + str(x))
+                #print("y: " + str(y))
             elif cur_matrix_type=="gapA_matrix":
                 self.seqA_align = self.seqA_align + "-" #add a gap in seqA
                 self.seqB_align = self.seqB_align + self._seqB[x-1] #[x-1] #add the next letter in seqB (in reverse order)
                 #update x to reflect that a letter in seqB was used
-                print("x: " + str(x))
-                print("y: " + str(y))
+                #print("x: " + str(x))
+                #print("y: " + str(y))
                 x -= 1
-                print("x: " + str(x))
-                print("y: " + str(y))
+                #print("x: " + str(x))
+                #print("y: " + str(y))
                 
             backtrace = which_back_matrix[cur_matrix_type] #get the backtrack matrix corresponding to the current matrix type
-            print(backtrace)
+            #print(backtrace)
             
             if(x>0 or y>0):
                 #update current_matrix_type by finding the matrix at the location where the backtrace matrix points
@@ -320,11 +320,11 @@ class NeedlemanWunsch:
                 
                 #print("x: " + str(x))
                 #print("y: " + str(y))
-                print("cur_row: " + str(cur_row))
-                print("cur_col: " + str(cur_col))
-                print("cur_matrix_type: " + cur_matrix_type)
-                print("seqA: " + self.seqA_align[::-1])
-                print("seqB: " + self.seqB_align[::-1])
+                #print("cur_row: " + str(cur_row))
+                #print("cur_col: " + str(cur_col))
+                #print("cur_matrix_type: " + cur_matrix_type)
+                #print("seqA: " + self.seqA_align[::-1])
+                #print("seqB: " + self.seqB_align[::-1])
                 
             
         #reverse the alignment strings
