@@ -28,9 +28,12 @@ def test_nw_alignment():
                          [-inf, -12.,  -1.,   5.],
                          [-inf, -14.,  -6.,   4.]])
     observed = NW._align_matrix
-    comparison = observed==expected
-    observed_equals_expected = comparison.all()
-    assert observed_equals_expected == True
+    for i in range(0,len(seq1)):
+        for j in range(0,len(seq2)):
+            if expected[i,j].isinf() == True:
+                assert observed[i,j].isinf() ==True
+            else:
+                assert expected[i,j] == observed[i,j]
     
     #check that the gap_B matrix equals what it should
     expected = np.array([[-10., -inf, -inf, -inf],
@@ -39,9 +42,12 @@ def test_nw_alignment():
                          [-13.,  -7.,  -7., -18.],
                          [-14.,  -8.,  -8.,  -6.]])
     observed = NW._gapB_matrix
-    comparison = observed==expected
-    observed_equals_expected = comparison.all()
-    assert observed_equals_expected == True
+    for i in range(0,len(seq1)):
+        for j in range(0,len(seq2)):
+            if expected[i,j].isinf() == True:
+                assert observed[i,j].isinf() ==True
+            else:
+                assert expected[i,j] == observed[i,j]
     
     #check that the gap_A matrix equals what it should
     expected = np.array([[-10., -11., -12., -13.],
@@ -50,9 +56,12 @@ def test_nw_alignment():
                          [-inf, -24., -18., -12.],
                          [-inf, -25., -19., -17.]])
     observed = NW._gapA_matrix
-    comparison = observed==expected
-    observed_equals_expected = comparison.all()
-    assert observed_equals_expected == True
+    for i in range(0,len(seq1)):
+        for j in range(0,len(seq2)):
+            if expected[i,j].isinf() == True:
+                assert observed[i,j].isinf()==True
+            else:
+                assert expected[i,j] == observed[i,j]
     
     #test a few other alignment outputs, just to check that everything is working is it should be
     assert NW.alignment_score == 4 #alignment score should be 4
@@ -83,9 +92,13 @@ def test_nw_backtrace():
                          [('align_matrix', 3, 0), ('gapB_matrix', 2, 0), ('gapB_matrix', 2, 1), ('align_matrix', 2, 2)],
                          [-inf, ('gapB_matrix', 3, 0), ('gapB_matrix', 3, 1), ('align_matrix', 3, 2)]], dtype=object)
     observed = NW._back
-    comparison = observed==expected
-    observed_equals_expected = comparison.all()
-    assert observed_equals_expected == True
+    for i in range(0,len(seq3)):
+        for j in range(0,len(seq4)):
+            if expected[i,j].isinf() == True:
+                assert observed[i,j].isinf() ==True
+            else:
+                assert expected[i,j] == observed[i,j]
+
     
     #_back_B check
     expected = np.array([[('gapB_matrix', 0, 0), ('gapB_matrix', 0, 1), ('gapB_matrix', 0, 2), ('gapB_matrix', 0, 3)],
@@ -95,9 +108,12 @@ def test_nw_backtrace():
                          [('gapB_matrix', 4, 0), ('gapB_matrix', 3, 1), ('gapB_matrix', 3, 2), ('align_matrix', 3, 3)]],
                         dtype=object)
     observed = NW._back_B
-    comparison = observed==expected
-    observed_equals_expected = comparison.all()
-    assert observed_equals_expected == True
+    for i in range(0,len(seq3)):
+        for j in range(0,len(seq4)):
+            if expected[i,j].isinf() == True:
+                assert observed[i,j].isinf() ==True
+            else:
+                assert expected[i,j] == observed[i,j]
     
     #_back_A check
     expected = np.array([[('gapA_matrix', 0, 0), ('gapA_matrix', 0, 1), ('gapA_matrix', 0, 2), ('gapA_matrix', 0, 3)],
@@ -107,9 +123,12 @@ def test_nw_backtrace():
                          [('gapA_matrix', 4, 0), ('gapB_matrix', 4, 0), ('gapB_matrix', 4, 1), ('align_matrix', 4, 2)]],
                         dtype=object)
     observed = NW._back_A
-    comparison = observed==expected
-    observed_equals_expected = comparison.all()
-    assert observed_equals_expected == True
+    for i in range(0,len(seq3)):
+        for j in range(0,len(seq4)):
+            if expected[i,j].isinf() == True:
+                assert observed[i,j].isinf() ==True
+            else:
+                assert expected[i,j] == observed[i,j]
     
     
 
