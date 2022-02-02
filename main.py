@@ -17,17 +17,24 @@ def main():
     # using gap opening penalty of -10 and a gap extension penalty of -1 and BLOSUM62 matrix
     
     #create a list of species alignment objects, and use the list.sort() method to sort them by alignment score
-    hs_gg = NeedlemanWunsch('../substitution_matrices/BLOSUM62.mat', -10, -1).align(hs_seq, gg_seq)
-    hs_mm = NeedlemanWunsch('../substitution_matrices/BLOSUM62.mat', -10, -1).align(hs_seq, mm_seq)
-    hs_br = NeedlemanWunsch('../substitution_matrices/BLOSUM62.mat', -10, -1).align(hs_seq, br_seq)
-    hs_tt = NeedlemanWunsch('../substitution_matrices/BLOSUM62.mat', -10, -1).align(hs_seq, tt_seq)
-    species_alignments = [hs_gg, hs_mm, hs_br, hs_tt] #list of objects
-    species_alignment.sort(key = lambda x: x.alignment_score, reverse=True) #sort in ascending order
-    d = {:"Gallus gallus", "Mus musculus", :"Balaeniceps rex", "Tursiops truncatus"}
+    hs_gg = NeedlemanWunsch('./substitution_matrices/BLOSUM62.mat', -10, -1)
+    hs_gg.align(hs_seq, gg_seq) #homo sapiens and gallus gallus alignment
+    hs_mm = NeedlemanWunsch('./substitution_matrices/BLOSUM62.mat', -10, -1)
+    hs_mm.align(hs_seq, mm_seq) #homo sapiens and mus musculus alignment
+    hs_br = NeedlemanWunsch('./substitution_matrices/BLOSUM62.mat', -10, -1)
+    hs_br.align(hs_seq, br_seq) #homo sapiens and balaeniceps rex alignment
+    hs_tt = NeedlemanWunsch('./substitution_matrices/BLOSUM62.mat', -10, -1)
+    hs_tt.align(hs_seq, tt_seq) #homo sapiens and tursiops truncatus alignment
+    
+    species_alignments = [hs_gg, hs_mm, hs_br, hs_tt] #list of created objects
+    species_alignments.sort(key = lambda x: x.alignment_score, reverse=True) #sort object list in ascending order
+    #create dictionary of alignment scores with aligned species
+    d = {3173:"Gallus gallus", 3682:"Mus musculus", 2941:"Balaeniceps rex", 3916:"Tursiops truncatus"}
     print("Species in order of similarity to humans (most->least):")
-    print(species_alignment) #prints names of species taken from dictionary
+    for i in range(0,4):
+        print(str(i+1) + ": " + d[species_alignments[i].alignment_score]) #prints names of species taken from dictionary
 
-    # print all of the alignment score between each species BRD2 and human BRD2
+    # print all of the alignment scores between each species BRD2 and human BRD2
     # using gap opening penalty of -10 and a gap extension penalty of -1 and BLOSUM62 matrix
     
     print("Alignment score between humans and Gallus gallus: " + str(hs_gg.alignment_score))
