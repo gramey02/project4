@@ -94,6 +94,7 @@ def test_nw_backtrace():
     observed = NW2._back
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
+            if i==4 and j==0
             if type(expected[i,j])==tuple:
                 assert expected[i,j] == observed[i,j]
             elif np.isinf(expected[i,j]) == True:
