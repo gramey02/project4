@@ -12,8 +12,12 @@ def test_nw_alignment():
     Use the BLOSUM62 matrix and a gap open penalty
     of -10 and a gap extension penalty of -1.
     """
+    #test for proper matrix filling by assessing if the filled matrices equal what is expected
     seq1, _ = read_fasta("./data/test_seq1.fa")
     seq2, _ = read_fasta("./data/test_seq2.fa")
+    
+    #create a NW object
+    NW1 = 
     pass
 
 def test_nw_backtrace():
