@@ -91,7 +91,7 @@ def test_nw_backtrace():
                          [('align_matrix', 2, 0), ('gapB_matrix', 1, 0), ('align_matrix', 1, 1), ('gapA_matrix', 1, 2)],
                          [('align_matrix', 3, 0), ('gapB_matrix', 2, 0), ('gapB_matrix', 2, 1), ('align_matrix', 2, 2)],
                          [-np.inf, ('gapB_matrix', 3, 0), ('gapB_matrix', 3, 1), ('align_matrix', 3, 2)]], dtype=object)
-    observed = NW._back
+    observed = NW2._back
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
             if expected[i,j].isinf() == True:
@@ -107,7 +107,7 @@ def test_nw_backtrace():
                          [('gapB_matrix', 3, 0), ('gapB_matrix', 2, 1), ('align_matrix', 2, 2), ('gapA_matrix', 2, 3)],
                          [('gapB_matrix', 4, 0), ('gapB_matrix', 3, 1), ('gapB_matrix', 3, 2), ('align_matrix', 3, 3)]],
                         dtype=object)
-    observed = NW._back_B
+    observed = NW2._back_B
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
             if expected[i,j].isinf() == True:
@@ -122,7 +122,7 @@ def test_nw_backtrace():
                          [('gapA_matrix', 3, 0), ('gapB_matrix', 3, 0), ('gapB_matrix', 3, 1), ('align_matrix', 3, 2)],
                          [('gapA_matrix', 4, 0), ('gapB_matrix', 4, 0), ('gapB_matrix', 4, 1), ('align_matrix', 4, 2)]],
                         dtype=object)
-    observed = NW._back_A
+    observed = NW2._back_A
     for i in range(0,len(seq3)):
         for j in range(0,len(seq4)):
             if expected[i,j].isinf() == True:
