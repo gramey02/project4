@@ -101,7 +101,7 @@ class NeedlemanWunsch:
     def align(self, seqA: str, seqB: str) -> Tuple[float, str, str]:
         """
         This function reads in two sequences of letters as strings.
-        The method will compute the lowest alignment score and find the corresponding sequence 
+        The method will compute the lowest alignment score for the strings and find the corresponding sequence 
         alignments based on initialized gap penalty and gap extension values.
         Global alignment is being performed, so the Needleman-Wunsch algorithm is implemented.
         Uses the _backtrace() method to get final score and alignments as outputs.
@@ -123,9 +123,10 @@ class NeedlemanWunsch:
         self._gapB_matrix = np.ones((len(seqA) + 1, len(seqB) + 1)) * -np.inf
 
         # create matrices for pointers used in backtrace procedure
-        self._back = np.ones((len(seqA) + 1, len(seqB) + 1)) * -np.inf
-        self._back_A = np.ones((len(seqA) + 1, len(seqB) + 1)) * -np.inf
-        self._back_B = np.ones((len(seqA) + 1, len(seqB) + 1)) * -np.inf
+        # adding dtype=np.ndarray will allow us to store objects (like tuples), rather than just integers, in the matrices
+        self._back = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = np.ndarray) * -np.inf
+        self._back_A = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = np.ndarray) * -np.inf
+        self._back_B = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = np.ndarray) * -np.inf
 
         # Resetting alignment in case method is called more than once
         self.seqA_align = ""
@@ -161,11 +162,11 @@ class NeedlemanWunsch:
                                                                                                  self._gapB_matrix[j-1,i-1])
                 
                 if max(self._align_matrix[j-1,i-1], self._gapA_matrix[j-1,i-1], self._gapB_matrix[j-1,i-1]) == self._align_matrix[j-1,i-1] :
-                    self._back[j,i] = ["align_matrix", j-1, i-1] #where the jth, ith value of M came from, tuple(matrix, row, col)
+                    self._back[j,i] = ("align_matrix", j-1, i-1) #where the jth, ith value of M came from, tuple(matrix, row, col)
                 elif max(self._align_matrix[j-1,i-1], self._gapA_matrix[j-1,i-1], self._gapB_matrix[j-1,i-1]) == self._gapA_matrix[j-1,i-1] :
-                    self._back[j,i] = ["gapA_matrix", j-1, i-1] #where the jth, ith value of M came from, tuple(matrix, row, col)
+                    self._back[j,i] = ("gapA_matrix", j-1, i-1) #where the jth, ith value of M came from, tuple(matrix, row, col)
                 elif max(self._align_matrix[j-1,i-1], self._gapA_matrix[j-1,i-1], self._gapB_matrix[j-1,i-1]) == self._gapB_matrix[j-1,i-1] :
-                    self._back[j,i] = ["gapB_matrix", j-1, i-1] #where the jth, ith value of M came from, tuple(matrix, row, col)
+                    self._back[j,i] = ("gapB_matrix", j-1, i-1) #where the jth, ith value of M came from, tuple(matrix, row, col)
                 
 
 
@@ -178,17 +179,17 @@ class NeedlemanWunsch:
                 if max(self.gap_start + self.gap_extend + self.align_matrix[j-1, i],
                        self.gap_extend + self._gapB_matrix[j-1,i],
                        self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_start + self.gap_extend + self.align_matrix[j-1, i] :
-                    self._back_B[j,i] = ["align_matrix", j-1, i]
+                    self._back_B[j,i] = ("align_matrix", j-1, i)
                 
                 elif max(self.gap_start + self.gap_extend + self.align_matrix[j-1, i],
                          self.gap_extend + self._gapB_matrix[j-1,i],
                          self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_extend + self._gapB_matrix[j-1,i] :
-                    self._back_B[j,i] = ["gapB_matrix", j-1, i]
+                    self._back_B[j,i] = ("gapB_matrix", j-1, i)
                     
                 elif max(self.gap_start + self.gap_extend + self.align_matrix[j-1, i],
                          self.gap_extend + self._gapB_matrix[j-1,i],
                          self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i]) == self.gap_start + self.gap_extend + self._gapA_matrix[j-1, i] :
-                    self._back_B[j,i] = ["gapA_matrix", j-1, i]
+                    self._back_B[j,i] = ("gapA_matrix", j-1, i)
                 
                 
                 
@@ -201,17 +202,17 @@ class NeedlemanWunsch:
                 if max(self.gap_start + self.gap_extend + self._align_matrix[j,i-1],
                        self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1],
                        self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_start + self.gap_extend + self._align_matrix[j,i-1] :
-                    self._back_A[j,i] = ["align_matrix", j, i-1]
+                    self._back_A[j,i] = ("align_matrix", j, i-1)
                     
                 elif max(self.gap_start + self.gap_extend + self._align_matrix[j,i-1],
                          self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1],
                          self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1] :
-                    self._back_A[j,i] = ["gapB_matrix", j, i-1]
+                    self._back_A[j,i] = ("gapB_matrix", j, i-1)
                     
                 elif max(self.gap_start + self.gap_extend + self._align_matrix[j,i-1],
                          self.gap_start + self.gap_extend + self._gapB_matrix[j,i-1],
                          self.gap_extend + self._gapA_matrix[j,i-1]) == self.gap_extend + self._gapA_matrix[j,i-1] :
-                    self._back_A[j,i] = ["gapA_matrix", j, i-1]
+                    self._back_A[j,i] = ("gapA_matrix", j, i-1)
                 
         return self._backtrace()
     
