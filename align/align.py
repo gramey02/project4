@@ -123,7 +123,7 @@ class NeedlemanWunsch:
         self._gapB_matrix = np.ones((len(seqA) + 1, len(seqB) + 1)) * -np.inf
 
         # create matrices for pointers used in backtrace procedure
-        # adding dtype=np.ndarray will allow us to store objects (like tuples), rather than just integers, in the matrices
+        # adding dtype=object will allow us to store objects (like tuples), rather than just integers, in the matrices
         self._back = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = object) * -np.inf
         self._back_A = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = object) * -np.inf
         self._back_B = np.ones((len(seqA) + 1, len(seqB) + 1), dtype = object) * -np.inf
@@ -148,7 +148,7 @@ class NeedlemanWunsch:
         for i in range(0,len(self._seqB)+1):
             self._gapA_matrix[0,i] = self.gap_open + self.gap_extend*i #initialize first row of seqB_align
         
-        #initialize the first row and column of the backtrace matrices (excluding the top left cell)
+        #initialize the first row and column of the backtrace matrices
         for i in range(0,len(self._seqA)+1):
             self._back_A[i,0] = ("gapA_matrix", i, 0)
         for i in range(0,len(self._seqB)+1):
@@ -166,7 +166,6 @@ class NeedlemanWunsch:
         for i in range(1,len(self._seqB)+1):
             for j in range(1,len(self._seqA)+1):
                     
-                #fill alignment/gap matrices and back matrices
                 
                 #fill _align_matrix and _back matrix:
                 #---------------------------------------------------------------------------------------------
